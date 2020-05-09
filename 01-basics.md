@@ -91,6 +91,132 @@ ORDER BY age DESC;
 SELECT * FROM pets WHERE name LIKE "P%;"
 ```
 
+## Column Operations
+15) Query the top 5 rows of the `employees` table to get a glimpse of these new data.
+```sql
+SELECT * FROM employees LIMIT 5;
+```
+
+16) Query the `employees` table, but convert their salaries to Euros. 
+    * _Hint:_ 1 Euro = 1.1 USD.
+    * _Hint2:_ If you think the output is ugly, try out the `ROUND()` function.
+```sql
+SELECT ID, firstname, lastname, job, ROUND(salary / 1.1, 2), startdate
+FROM employees;
+```
+
+17) Repeat the previous problem, but rename the column `salary_eu`.
+```sql
+SELECT
+    ID,
+    firstname,
+    lastname,
+    job,
+    ROUND(salary / 1.1, 2) as salary_eu,
+    startdate
+FROM employees;
+```
+
+18) Query the `employees` table, but combine the `firstname` and `lastname` columns to be "Firstname, Lastname" format. Call this column `fullname`. For example, the first row should contain `Thompson, Christine` as `fullname`. Also, display the rounded `salary_eu` instead of `salary`.
+    * _Hint:_ The string concatenation operator is `||`
+```sql
+SELECT
+    ID,
+    lastname || ", " || firstname AS fullname,
+    job,
+    ROUND(salary / 1.1, 2) AS salary_eu,
+    startdate
+FROM employees;
+```
+
+19) Query the `employees` table, but replace `startdate` with `startyear` using the `SUBSTR()` function. Also include `fullname` and `salary_eu`.
+```sql
+SELECT
+    ID,
+    lastname || ", " || firstname AS fullname,
+    job,
+    ROUND(salary / 1.1, 2) AS salary_eu,
+    SUBSTR(startdate, 1, 4) AS startyear
+FROM employees;
+```
+
+20) Repeat the above problem, but instead of using `SUBSTR()`, use `STRFTIME()`.
+```sql
+SELECT
+    ID,
+    lastname || ", " || firstname AS fullname,
+    job,
+    ROUND(salary / 1.1, 2) AS salary_eu,
+    STRFTIME("%Y", startdate) AS startyear
+FROM employees;
+```
+
+21) Query the `employees` table, replacing `firstname`/`lastname` with `fullname` and `startdate` with `startyear`. Print out the salary in USD again, except format it with a dollar sign, comma separators, and no decimal. For example, the first row should read `$123,696`. This column should still be named `salary`.
+    * _Hint:_ Check out SQLite's `printf` function.
+    * _Hint2:_ The format string you'll need is `$%,.2d`. You should read more about such formatting strings as they're useful in Python, too!
+```sql
+SELECT
+    ID,
+    lastname || ", " || firstname AS fullname,
+    job,
+    PRINTF("$%,.2d", salary) AS salary,
+    ROUND(salary / 1.1, 2) AS salary_eu,
+    STRFTIME("%Y", startdate) AS startyear
+FROM employees;
+```
+
+For the next few problems, you'll probably want to use `CASE`/`WHEN` statements.
+22) Last year, only salespeople were eligible for bonuses. Create a column `bonus` that is "Yes" if you're eligible for a bonus, otherwise "No".
+```sql
+SELECT
+    *,
+    CASE job
+        WHEN "Sales" THEN "Yes"
+        ELSE "No"
+    END AS bonus
+FROM employees;
+```
+
+23) This year, only sales people with a salary of $100,000 or higher are eligible for bonuses. Create a `bonus` column like in the last problem for salespeople with salaries at least $100,000.
+```sql
+SELECT
+    *,
+    CASE
+        WHEN (job = "Sales" AND salary >= 100000) THEN "Yes"
+        ELSE "No"
+    END AS bonus
+FROM employees;
+```
+
+24) Next year, the bonus structure will be a little more complicated. You'll create a `target_comp` column which represents an employee's target total compensation after their bonus. Here is the company's bonus structure:
+
+* Salespeople who make more than $100,000 will be eligible for a 10% bonus.
+* Salespeople who make less than $100,000 will be eligible for a 5% bonus.
+* Administrators will also be eligible for a 5% bonus.
+* Anyone who does not meet any of the above descriptions is not eligible for a bonus.
+
+Create this `target_comp` column, making sure to format _both_ the `salary` and `target_comp` columns nicely (ie, with dollar signs and comma separators).
+
+```sql
+SELECT
+    ID,
+    firstname,
+    lastname,
+    job,
+    PRINTF("$%,.2d", salary) as salary,
+    PRINTF(
+        "$%,.2d",
+        CASE
+            WHEN (job = "Sales" AND salary >= 100000) THEN 1.10*salary
+            WHEN (job = "Sales") THEN 1.05*salary
+            WHEN (job = "Administrator") THEN 1.05*salary
+            ELSE salary
+        END
+    ) AS target_comp
+FROM employees;
+```
+
+
 
 
 
