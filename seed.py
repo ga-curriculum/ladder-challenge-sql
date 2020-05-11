@@ -1,5 +1,7 @@
 import os
 import datetime
+import random
+
 from collections import OrderedDict
 
 from faker import Faker
@@ -59,15 +61,6 @@ CREATE TABLE IF NOT EXISTS employees (
 );
 """)
 
-cur.execute("""
-CREATE TABLE IF NOT EXISTS pets (
-    name text,
-    sex text,
-    species text,
-    age integer
-);
-""")
-
 def gen_fake_person(fake, i):
     return (
         i,
@@ -95,8 +88,25 @@ def add_into_employees(emp):
 fake = Faker()
 Faker.seed(2020)
 np.random.seed(2020)
-for i in range(1000):
+for i in range(100):
     employee = gen_fake_person(fake, i)
     add_into_employees(employee)
+
+# Seed employees with NULLs ==================================
+cur.execute("""
+CREATE TABLE IF NOT EXISTS employees_null AS 
+    SELECT * FROM employees
+;
+""")
+
+random.seed(2020)
+for ix in random.sample(range(100), 10):
+    cur.execute("""
+    UPDATE employees_null
+    SET
+        salary = NULL
+    WHERE
+        ID = ?
+    """, (ix,))
 
 conn.commit()

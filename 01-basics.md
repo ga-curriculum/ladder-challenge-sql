@@ -91,6 +91,13 @@ ORDER BY age DESC;
 SELECT * FROM pets WHERE name LIKE "P%;"
 ```
 
+XX) Select all employees from `employees_null` where the salary is missing.
+XX) Select all employees from `employees_null` where the salary is below $35,000 or missing.
+XX) Select all employees from `employees` named Thomas.
+XX) Select all employees from `employees` named Thomas or Shannon.
+XX) Select all employees from `employees` named Robert, Lisa, or any name that begins with a J. In addition, only show employees who are _not_ in sales. This will be a little bit of a longer query.
+    * _Hint:_ There will only be 6 rows in the result.
+
 ## Column Operations
 15) Query the top 5 rows of the `employees` table to get a glimpse of these new data.
 ```sql
@@ -215,11 +222,3 @@ SELECT
     ) AS target_comp
 FROM employees;
 ```
-
-
-
-
-
-
-
-

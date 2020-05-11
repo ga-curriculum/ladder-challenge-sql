@@ -27,6 +27,7 @@ There are millions of GUI programs out there at serve simply as a place to enter
 
 * [DB Browser for SQLite](https://sqlitebrowser.org) - Fast and lightweight. Allows you to view SQL tables graphically. As the name implies, only good for SQLite databases.
 * [Sqlectron](https://sqlectron.github.io) - A little slow, but neatly organizes all of your database connections for easy re-entry.
+* [Valentina Studio](https://valentina-db.com/en/valentina-studio-overview) - Heavy duty IDE, can also make schema diagrams.
 
 ### Option 2: Use the command line and text files (recommended for pros now, recommended for everyone else in the long run)
 The SQLite3 command line application has already been installed with Anaconda. Here are some instructions to get started:
