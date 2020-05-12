@@ -109,4 +109,47 @@ for ix in random.sample(range(100), 10):
         ID = ?
     """, (ix,))
 
+cur.execute("""
+INSERT INTO employees_null (ID, firstname, lastname, job, salary, startdate)
+VALUES (?, ?, ?, ?, ?, ?);
+""", (101, "UNKNOWN", "UNKNOWN", None, -1, None)) 
+
+# Seed transactions ==================================
+cur.execute("""
+CREATE TABLE IF NOT EXISTS transactions (
+    order_id integer,
+    customer text,
+    unit_price real,
+    quantity integer,
+    employee_id integer
+);
+""")
+
+Faker.seed(1234)
+fake = Faker()
+customers = [fake.company() for i in range(100)]
+
+salespeople = [
+    id_num[0] for id_num in
+    cur.execute("SELECT id FROM employees WHERE job = \"Sales\"").fetchall()
+]
+
+def add_into_transactions(row):
+    transaction_query = """
+    INSERT INTO transactions (order_id, customer, unit_price, quantity, employee_id)
+    VALUES (?, ?, ?, ?, ?)
+    """
+    cur.execute(transaction_query, row)
+
+for order_id in range(10000):
+    customer = random.choice(customers)
+    employee = random.choice(salespeople)
+    n_items = np.random.poisson(5)
+    unit_prices = np.round(np.random.uniform(10, 100, size=n_items)) / 4
+    for price in unit_prices:
+        quantity = np.random.poisson(10)
+        add_into_transactions(
+            (order_id, customer, price, quantity, employee)
+        )
+
 conn.commit()

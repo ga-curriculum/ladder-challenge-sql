@@ -67,7 +67,7 @@ SELECT *
 FROM pets
 WHERE
     (sex = "M" AND species = "dog")
-    OR (sex = "F" and species = "cat");
+    OR (sex = "F" AND species = "cat");
 ```
 
 12) Query the five oldest pets in the `pets` table.
@@ -82,7 +82,7 @@ LIMIT 5;
 ```sql
 SELECT name, age
 FROM pets
-WHERE sex = "F" and species = "cat"
+WHERE sex = "F" AND species = "cat"
 ORDER BY age DESC;
 ```
 
@@ -93,6 +93,8 @@ SELECT * FROM pets WHERE name LIKE "P%;"
 
 XX) Select all employees from `employees_null` where the salary is missing.
 XX) Select all employees from `employees_null` where the salary is below $35,000 or missing.
+XX) Select all employees from `employees_null` where the job title is missing. What do you see?
+XX) Who is the newest employee in `employees`? The most senior?
 XX) Select all employees from `employees` named Thomas.
 XX) Select all employees from `employees` named Thomas or Shannon.
 XX) Select all employees from `employees` named Robert, Lisa, or any name that begins with a J. In addition, only show employees who are _not_ in sales. This will be a little bit of a longer query.
@@ -119,7 +121,7 @@ SELECT
     firstname,
     lastname,
     job,
-    ROUND(salary / 1.1, 2) as salary_eu,
+    ROUND(salary / 1.1, 2) AS salary_eu,
     startdate
 FROM employees;
 ```
@@ -210,7 +212,7 @@ SELECT
     firstname,
     lastname,
     job,
-    PRINTF("$%,.2d", salary) as salary,
+    PRINTF("$%,.2d", salary) AS salary,
     PRINTF(
         "$%,.2d",
         CASE
