@@ -118,22 +118,172 @@ FROM employees;
 
 ## Aggregating Statistics with GROUP BY
 XX) What is the average age of `pets` by species?
+
+```sql
+SELECT AVG(age) FROM pets GROUP BY species;
+```
+
 XX) Repeat the previous problem but make sure the species label is also displayed! Assume this behavior is always being asked of you any time you use `GROUP BY`.
+
+```sql
+SELECT species, AVG(age) FROM pets GROUP BY species;
+```
+
 XX) What is the count, mean, minimum, and maximum age by species in `pets`?
+
+```sql
+SELECT
+    species,
+    COUNT(age),
+    AVG(age),
+    MIN(age),
+    MAX(age)
+FROM pets
+GROUP BY species;
+```
+
 XX) Show the mean salaries of each job title in `employees`.
+
+```sql
+SELECT job, AVG(salary) FROM employees GROUP BY job;
+```
+
 XX) Show the mean salaries in New Zealand dollars of each job title in `employees`.
     * _NOTE:_ 1 USD = 1.65 NZD.
+
+```sql
+SELECT job, AVG(salary*1.65) FROM employees GROUP BY job;
+```
+
 XX) Show the mean, min, and max salaries of each job title in `employees`, as well as the numbers of employees in each category.
+
+```sql
+SELECT
+    job,
+    COUNT(salary),
+    AVG(salary),
+    MIN(salary),
+    MAX(salary)
+FROM employees
+GROUP BY job;
+```
+
 XX) Show the mean salaries of each job title in `employees` sorted descending by salary.
+
+```sql
+SELECT job, AVG(salary) as avg_sal
+FROM employees
+GROUP BY job
+ORDER BY avg_sal DESC;
+```
+
 XX) What are the top 5 most common first names among `employees`?
+
+```sql
+SELECT firstname, COUNT(firstname) as freq
+FROM employees
+GROUP BY firstname
+ORDER BY freq DESC
+LIMIT 5;
+```
+
 XX) Show all first names which have exactly 2 occurrences in `employees`.
+
+```sql
+SELECT firstname, COUNT(firstname) as freq
+FROM employees
+GROUP BY firstname
+HAVING freq = 2;
+```
+
 XX) Take a look at the `transactions` table to get a idea of what it contains. Note that a transaction may span multiple rows if different items are purchased as part of the same order. The employee who made the order is also given by their ID.
+
+```sql
+SELECT * FROM transactions LIMIT 10;
+```
+
+XX) Show the top 5 largest orders (and their respective customer) in terms of the numbers of items purchased in that order.
+
+```sql
+SELECT
+    order_id,
+    customer,
+    SUM(quantity) AS total_items
+FROM transactions
+GROUP BY order_id
+ORDER BY total_items DESC
+LIMIT 5;
+```
+
 XX) Show the total cost of each transaction.
     * _Hint:_ The `unit_price` column is the price of _one_ item. The customer may have purchased multiple.
     * _Hint2:_ Note that transactions here span multiple rows if different items are purchased.
+
+```sql
+SELECT
+    order_id,
+    SUM(unit_price*quantity) AS total_price
+FROM transactions
+GROUP BY order_id;
+```
+
 XX) Show the top 5 transactions in terms of total cost.
+
+```sql
+SELECT
+    order_id,
+    SUM(unit_price*quantity) AS total_price
+FROM transactions
+GROUP BY order_id
+ORDER BY total_price DESC
+LIMIT 5;
+```
+
 XX) Show the top 5 customers in terms of total revenue (ie, which customers have we done the most business with in terms of money?)
+
+```sql
+SELECT
+    customer,
+    SUM(unit_price*quantity) AS total_price
+FROM transactions
+GROUP BY customer
+ORDER BY total_price DESC
+LIMIT 5;
+```
+
 XX) Show the top 5 employees in terms of revenue generated (ie, which employees made the most in sales?)
+
+```sql
+SELECT
+    employee_id,
+    SUM(unit_price*quantity) AS total_price
+FROM transactions
+GROUP BY employee_id
+ORDER BY total_price DESC
+LIMIT 5;
+```
+
 XX) Which customer worked with the largest number of employees?
     * _Hint:_ This is a tough one! Check out the `DISTINCT` keyword.
+
+```sql
+SELECT
+    customer,
+    COUNT(DISTINCT employee_id) as n_employees
+FROM transactions
+GROUP BY customer
+ORDER BY n_employees DESC
+LIMIT 5;
+```
+
 XX) Show all customers who've done more than $80,000 worth of business with us.
+
+```sql
+SELECT
+    customer,
+    SUM(unit_price*quantity) AS total_price
+FROM transactions
+GROUP BY customer
+HAVING total_price > 80000
+ORDER BY total_price DESC;
+```

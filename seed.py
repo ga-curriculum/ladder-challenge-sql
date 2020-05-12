@@ -121,11 +121,15 @@ CREATE TABLE IF NOT EXISTS transactions (
     customer text,
     unit_price real,
     quantity integer,
+    orderdate text,
     employee_id integer
 );
 """)
 
 Faker.seed(1234)
+random.seed(1234)
+np.random.seed(1234)
+
 fake = Faker()
 customers = [fake.company() for i in range(100)]
 
@@ -136,8 +140,8 @@ salespeople = [
 
 def add_into_transactions(row):
     transaction_query = """
-    INSERT INTO transactions (order_id, customer, unit_price, quantity, employee_id)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO transactions (order_id, customer, unit_price, quantity, orderdate, employee_id)
+    VALUES (?, ?, ?, ?, ?, ?)
     """
     cur.execute(transaction_query, row)
 
@@ -146,10 +150,14 @@ for order_id in range(10000):
     employee = random.choice(salespeople)
     n_items = np.random.poisson(5)
     unit_prices = np.round(np.random.uniform(10, 100, size=n_items)) / 4
+    orderdate = fake.date_between_dates(
+        date_start=datetime.date(year=1990, month=1, day=1),
+        date_end=datetime.date(year=2020, month=1, day=1)
+    ).strftime("%Y-%m-%d")
     for price in unit_prices:
         quantity = np.random.poisson(10)
         add_into_transactions(
-            (order_id, customer, price, quantity, employee)
+            (order_id, customer, price, quantity, orderdate, employee)
         )
 
 conn.commit()
