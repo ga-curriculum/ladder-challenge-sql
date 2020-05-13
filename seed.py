@@ -5,7 +5,10 @@ import random
 from collections import OrderedDict
 
 from faker import Faker
+
 import numpy as np
+import pandas as pd
+
 import sqlite3
 
 if os.path.exists("ladder.db"):
@@ -159,5 +162,29 @@ for order_id in range(10000):
         add_into_transactions(
             (order_id, customer, price, quantity, orderdate, employee)
         )
+
+# Seed transactions ==================================
+cur.execute("""
+CREATE TABLE IF NOT EXISTS yum (
+    date text,
+    open real,
+    high real,
+    low real,
+    close real,
+    volume integer
+);
+""")
+
+yum = pd.read_csv("data/yum.csv")
+
+def add_into_yum(row):
+    yum_query = """
+    INSERT INTO yum (date, open, high, low, close, volume)
+    VALUES (?, ?, ?, ?, ?, ?)
+    """
+    cur.execute(yum_query, row)
+
+for row in yum.iterrows():
+    add_into_yum(tuple(row[1]))
 
 conn.commit()
