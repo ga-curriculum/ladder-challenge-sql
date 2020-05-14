@@ -4,7 +4,7 @@ The only new topic in this file is window functions. By itself, this topic is no
 
 ## Window Functions
 
-XX) Create a daily cumulative sum of the trading volume of the Yum! stock in `yum`.
+78) Create a daily cumulative sum of the trading volume of the Yum! stock in `yum`.
 
 ```sql
 SELECT
@@ -13,7 +13,7 @@ SELECT
 FROM yum;
 ```
 
-XX) Create a cumulative sum of the trading volume of Yum! across months. That is, the final row of this query should be the cumulative sum of all months from 2015 through 2019.
+79) Create a cumulative sum of the trading volume of Yum! across months. That is, the final row of this query should be the cumulative sum of all months from 2015 through 2019.
 
 ```sql
 SELECT
@@ -26,7 +26,7 @@ GROUP BY year, month
 ORDER BY year, month;
 ```
 
-XX) For March 2017, create a table from `yum` with the following columns:
+80) For March 2017, create a table from `yum` with the following columns:
 * Day of the month
 * Row number (ie, the nth trading day of the month)
 * Cumulative low (ie, lowest low so far this month)
@@ -46,7 +46,7 @@ WHERE
     AND STRFTIME("%m", date) = "03";
 ```
 
-XX) From `yum`, create a column that represents the 7-day moving average of the closing price. This syntax is very confusing. You can read more about it [here](https://www.sqlitetutorial.net/sqlite-window-functions/sqlite-window-frame/).
+81) From `yum`, create a column that represents the 7-day moving average of the closing price. This syntax is very confusing. You can read more about it [here](https://www.sqlitetutorial.net/sqlite-window-functions/sqlite-window-frame/).
 
 ```sql
 SELECT
@@ -58,7 +58,7 @@ SELECT
 FROM yum;
 ```
 
-XX) Repeat the March 2017 problem but instead of cumulative highs, lows, and totals, show the 5-day moving highs and lows. (No need for volume here.)
+82) Repeat the March 2017 problem but instead of cumulative highs, lows, and totals, show the 5-day moving highs and lows. (No need for volume here.)
 
 ```sql
 SELECT
@@ -78,7 +78,7 @@ WHERE
     AND STRFTIME("%m", date) = "03";
 ```
 
-XX) The [**Williams %R**](https://www.investopedia.com/terms/w/williamsr.asp) is an economic trendline indicator of a stock. Query `yum` to only include two columns: the `date` (unmodified), and the 7-day Williams %R of the stock at that date, call it `williams_r`. It is computed as follows:
+83) The [**Williams %R**](https://www.investopedia.com/terms/w/williamsr.asp) is an economic trendline indicator of a stock. Query `yum` to only include two columns: the `date` (unmodified), and the 7-day Williams %R of the stock at that date, call it `williams_r`. It is computed as follows:
 
 * Let `h7` be the running 7-day high (ie, highest high of the last 7 trading days).
 * Let `l7` be the running 7-day low (ie, lowest low of the lsat 7 trading days).
@@ -108,7 +108,7 @@ FROM yum_wr
 ORDER BY date;
 ```
 
-XX) Next, let's create the [**Stochastic Oscillator**](https://www.investopedia.com/terms/s/stochasticoscillator.asp) of `yum`. The stochastic oscillator is actually two lines: One called _%K_ and the other called _%D_. They are computed as follows:
+84) Next, let's create the [**Stochastic Oscillator**](https://www.investopedia.com/terms/s/stochasticoscillator.asp) of `yum`. The stochastic oscillator is actually two lines: One called _%K_ and the other called _%D_. They are computed as follows:
 
 * Let `h14` and `l14` denote the 14-day highs and lows (similar to last problem)
 * `percent_k = (close - l14) / (h14 - l14)`
@@ -156,15 +156,15 @@ FROM yum_pk
 ORDER BY date;
 ```
 
-XX) In my opinion, this is the hardest problem in the ladder challenge. For each month between 2015 and 2019, as in the final problem from the `03` file, we'll attach Yum! stock data to the `transactions` data. Let's condense our `yum` data to show relevant monthly statistics. That is, for each month of each year, create a table with the following columns:
+85) In my opinion, this is the hardest problem in the ladder challenge. For each month between 2015 and 2019, as in the final problem from the `03` file, we'll attach Yum! stock data to the `transactions` data. Let's condense our `yum` data to show relevant monthly statistics. That is, for each month of each year, create a table with the following columns:
 * Year
 * Month
 * The total revenue from our company in `transactions`
 * The monthly low (ie, the lowest low that month)
 * The monthly high (ie, the highest high that month)
-* The total trade volume of Yum! that month
 * The monthly open (ie, the opening value in the first trading day that month)
 * The monthly close (ie, the closing value of the last trading day that month)
+* The total trade volume of Yum! that month
 
 My solution to this problem is 38 lines long. For reference, here are the top 3 rows of the solution:
 

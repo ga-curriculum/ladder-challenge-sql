@@ -91,22 +91,79 @@ ORDER BY age DESC;
 SELECT * FROM pets WHERE name LIKE "P%;"
 ```
 
-XX) Select all employees from `employees_null` where the salary is missing.
-XX) Select all employees from `employees_null` where the salary is below $35,000 or missing.
-XX) Select all employees from `employees_null` where the job title is missing. What do you see?
-XX) Who is the newest employee in `employees`? The most senior?
-XX) Select all employees from `employees` named Thomas.
-XX) Select all employees from `employees` named Thomas or Shannon.
-XX) Select all employees from `employees` named Robert, Lisa, or any name that begins with a J. In addition, only show employees who are _not_ in sales. This will be a little bit of a longer query.
+15) Select all employees from `employees_null` where the salary is missing.
+```sql
+SELECT * FROM employees_null WHERE salary IS NULL;
+```
+
+16) Select all employees from `employees_null` where the salary is below $35,000 or missing.
+```sql
+SELECT *
+FROM employees_null
+WHERE (salary IS NULL) OR (salary < 35000);
+```
+
+17) Select all employees from `employees_null` where the job title is missing. What do you see?
+```sql
+-- There is an erroneous row in our data.
+SELECT * FROM employees_null WHERE job IS NULL;
+```
+
+18) Who is the newest employee in `employees`? The most senior?
+```sql
+-- Newest: Roger Conner
+SELECT *
+FROM employees
+ORDER BY startdate DESC
+LIMIT 1;
+```
+
+```sql
+-- Most senior: Mary Nash
+SELECT *
+FROM employees
+ORDER BY startdate
+LIMIT 1;
+```
+
+19) Select all employees from `employees` named Thomas.
+```sql
+SELECT *
+FROM employees
+WHERE firstname = "Thomas";
+```
+
+20) Select all employees from `employees` named Thomas or Shannon.
+```sql
+SELECT *
+FROM employees
+WHERE firstname = "Thomas" OR firstname = "Shannon";
+```
+
+21) Select all employees from `employees` named Robert, Lisa, or any name that begins with a J. In addition, only show employees who are _not_ in sales. This will be a little bit of a longer query.
     * _Hint:_ There will only be 6 rows in the result.
 
+```sql
+SELECT *
+FROM employees
+WHERE
+    (
+        firstname = "Robert"
+        OR firstname = "Lisa"
+        OR firstname LIKE "J%"
+    ) AND (
+        job != "Sales"
+    )
+```
+
+
 ## Column Operations
-15) Query the top 5 rows of the `employees` table to get a glimpse of these new data.
+22) Query the top 5 rows of the `employees` table to get a glimpse of these new data.
 ```sql
 SELECT * FROM employees LIMIT 5;
 ```
 
-16) Query the `employees` table, but convert their salaries to Euros. 
+23) Query the `employees` table, but convert their salaries to Euros. 
     * _Hint:_ 1 Euro = 1.1 USD.
     * _Hint2:_ If you think the output is ugly, try out the `ROUND()` function.
 ```sql
@@ -114,7 +171,7 @@ SELECT ID, firstname, lastname, job, ROUND(salary / 1.1, 2), startdate
 FROM employees;
 ```
 
-17) Repeat the previous problem, but rename the column `salary_eu`.
+24) Repeat the previous problem, but rename the column `salary_eu`.
 ```sql
 SELECT
     ID,
@@ -126,7 +183,7 @@ SELECT
 FROM employees;
 ```
 
-18) Query the `employees` table, but combine the `firstname` and `lastname` columns to be "Firstname, Lastname" format. Call this column `fullname`. For example, the first row should contain `Thompson, Christine` as `fullname`. Also, display the rounded `salary_eu` instead of `salary`.
+25) Query the `employees` table, but combine the `firstname` and `lastname` columns to be "Firstname, Lastname" format. Call this column `fullname`. For example, the first row should contain `Thompson, Christine` as `fullname`. Also, display the rounded `salary_eu` instead of `salary`.
     * _Hint:_ The string concatenation operator is `||`
 ```sql
 SELECT
@@ -138,7 +195,7 @@ SELECT
 FROM employees;
 ```
 
-19) Query the `employees` table, but replace `startdate` with `startyear` using the `SUBSTR()` function. Also include `fullname` and `salary_eu`.
+26) Query the `employees` table, but replace `startdate` with `startyear` using the `SUBSTR()` function. Also include `fullname` and `salary_eu`.
 ```sql
 SELECT
     ID,
@@ -149,7 +206,7 @@ SELECT
 FROM employees;
 ```
 
-20) Repeat the above problem, but instead of using `SUBSTR()`, use `STRFTIME()`.
+27) Repeat the above problem, but instead of using `SUBSTR()`, use `STRFTIME()`.
 ```sql
 SELECT
     ID,
@@ -160,7 +217,7 @@ SELECT
 FROM employees;
 ```
 
-21) Query the `employees` table, replacing `firstname`/`lastname` with `fullname` and `startdate` with `startyear`. Print out the salary in USD again, except format it with a dollar sign, comma separators, and no decimal. For example, the first row should read `$123,696`. This column should still be named `salary`.
+28) Query the `employees` table, replacing `firstname`/`lastname` with `fullname` and `startdate` with `startyear`. Print out the salary in USD again, except format it with a dollar sign, comma separators, and no decimal. For example, the first row should read `$123,696`. This column should still be named `salary`.
     * _Hint:_ Check out SQLite's `printf` function.
     * _Hint2:_ The format string you'll need is `$%,.2d`. You should read more about such formatting strings as they're useful in Python, too!
 ```sql
@@ -175,7 +232,7 @@ FROM employees;
 ```
 
 For the next few problems, you'll probably want to use `CASE`/`WHEN` statements.
-22) Last year, only salespeople were eligible for bonuses. Create a column `bonus` that is "Yes" if you're eligible for a bonus, otherwise "No".
+29) Last year, only salespeople were eligible for bonuses. Create a column `bonus` that is "Yes" if you're eligible for a bonus, otherwise "No".
 ```sql
 SELECT
     *,
@@ -186,7 +243,7 @@ SELECT
 FROM employees;
 ```
 
-23) This year, only sales people with a salary of $100,000 or higher are eligible for bonuses. Create a `bonus` column like in the last problem for salespeople with salaries at least $100,000.
+30) This year, only sales people with a salary of $100,000 or higher are eligible for bonuses. Create a `bonus` column like in the last problem for salespeople with salaries at least $100,000.
 ```sql
 SELECT
     *,
@@ -197,7 +254,7 @@ SELECT
 FROM employees;
 ```
 
-24) Next year, the bonus structure will be a little more complicated. You'll create a `target_comp` column which represents an employee's target total compensation after their bonus. Here is the company's bonus structure:
+31) Next year, the bonus structure will be a little more complicated. You'll create a `target_comp` column which represents an employee's target total compensation after their bonus. Here is the company's bonus structure:
 
 * Salespeople who make more than $100,000 will be eligible for a 10% bonus.
 * Salespeople who make less than $100,000 will be eligible for a 5% bonus.
