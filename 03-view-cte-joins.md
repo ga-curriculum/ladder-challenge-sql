@@ -40,6 +40,7 @@ Christine Thompson started in 2005 and makes $123,696 working in sales.
 ```
 
 To do this easily, make a CTE featuring name (firstname + " " + lastname), job, salary (formatted), and year. Job title should be lowercased, _unless_ it is IT, in which case leave it capitalized. The solution is simple string concatenation off of this long CTE.
+
 69) How many of our sales come from companies ending in each of "LLC", "Inc", "Ltd", or "PLC"? In a CTE, create a `company_type` column of values `"LLC"`, `"Inc"`, `"Ltd"`, `"PLC"`, or `"Other"`. Outside the CTE, find the total revenue from these categories, as well as their respective counts.
 * _Hint:_ You'll need the `INSTR()` function.
 
