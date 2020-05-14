@@ -253,7 +253,7 @@ LEFT JOIN employees AS e
 WHERE e.startdate > t.orderdate;
 ```
 
-XX) Among all transactions that occurred from 2015 to 2019, create a table that is the monthly revenue and the total trading volume of Yum! in that month. Format the columns nicely. That is, a sample row of your result might look like this:
+XX) Among all transactions that occurred from 2015 to 2019, create a table that is the monthly revenue of our company versus the total trading volume of Yum! in that month. Format the columns nicely. That is, a sample row of your result might look like this:
 
 ```
 | year | month | company_revenue | yum_trade_volume |
@@ -278,8 +278,3 @@ ORDER BY t.year, t.month;
 XX) Repeat the previous problem, but in addition to the total volume, include:
 * The lowest price that month (ie, lowest low)
 * The highest price that month (ie, highest high)
-
-<!-- TODO: -->
-* The opening price for that month (ie, the first open of the month)
-* The closing price for that month (ie, the last close of the month)
-
