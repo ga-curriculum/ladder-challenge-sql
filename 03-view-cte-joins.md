@@ -4,7 +4,7 @@ This file contains several exercises on views, common table expressions (CTEs), 
 
 * [Tutorial on Views](https://www.sqlitetutorial.net/sqlite-create-view/)
 * [Tutorial on CTEs](https://www.essentialsql.com/introduction-common-table-expressions-ctes/)
-* Tutorial on Window Functions
+* [Tutorial on Joins](https://www.sqlitetutorial.net/sqlite-join/)
 
 Here are a few other important notes I'd like you read before beginning:
 * Some of these problems can get pretty involved. Queries with adequate spacing can go longer than 15 lines in some problems.
