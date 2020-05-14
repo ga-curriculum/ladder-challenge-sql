@@ -65,7 +65,6 @@ SELECT
     MAX(age) AS "Maximum Age"
 FROM pets;
 ```
-
 XX) How many rows in `employees_null` have missing salaries?
 
 ```sql

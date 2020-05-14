@@ -35,7 +35,7 @@ def add_into_pets(data):
 
 pets = [
     ("Chloe", "F", "dog", 9),
-    ("Paddinton", "M", "dog", 10),
+    ("Paddington", "M", "dog", 10),
     ("Petey", "M", "dog", 7),
     ("Bella", "F", "dog", 1),
     ("Glenn Coco", "M", "cat", 6),

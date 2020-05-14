@@ -85,4 +85,114 @@ GROUP BY employee_id
 ORDER BY employee_id;
 ```
 
-XX) 
+## Common Table Expressions (CTEs)
+CTEs are a convenient way of shortening SQL queries to keep your code DRY (**d**on't **r**epeat **y**ourself). You'll notice they're essentially the same in terms of the tasks they can accomplish, however CTEs are _temporary_. They vanish after the query has been called. Essentially, CTEs are single-use views.
+
+Therefore, CTEs aren't needed to solve any of the following problems. You could use a view instead, however that would be wasteful since you'll never use them again. Additionally, for some problems, neither a view nor a CTE is truly needed, but the query would be very messy without one.
+
+XX) What's the most common first initial for pets in the `pets` table?
+    * _Hint:_ Create a CTE that is simply the lowercased first letter of the pet's name. The solution is a simple `GROUP BY` from this CTE.
+    * _Hint 2:_ You'll need the `SUBSTR()` and `LOWER()` functions.
+
+```sql
+WITH pet_letter AS (
+    SELECT LOWER(SUBSTR(name, 1, 1)) AS letter
+    FROM pets
+)
+SELECT letter, COUNT(letter) AS freq
+FROM pet_letter
+GROUP BY letter
+ORDER BY freq DESC;
+```
+
+XX) Create taglines for each employee in the `employees` table. As a template, the first row of the result should look like this:
+
+```
+Christine Thompson started in 2005 and makes $123,696 working in sales. 
+```
+
+To do this easily, make a CTE featuring name (firstname + " " + lastname), job, salary (formatted), and year. Job title should be lowercased, _unless_ it is IT, in which case leave it capitalized. The solution is simple string concatenation off of this long CTE.
+
+```sql
+WITH emp_fmt AS (
+    SELECT
+        firstname || " " || lastname AS name,
+        CASE job
+            WHEN "IT" THEN job
+            ELSE LOWER(job)
+        END AS job,
+        PRINTF("$%,.d", salary) AS salary,
+        STRFTIME("%Y", startdate) AS year
+    FROM employees
+)
+SELECT
+    name || " started in " || year || " and makes " ||
+    salary || " working in " || job || "." AS tagline
+FROM emp_fmt;
+```
+
+XX) How many of our sales come from companies ending in each of "LLC", "Inc", "Ltd", or "PLC"? In a CTE, create a `company_type` column of values `"LLC"`, `"Inc"`, `"Ltd"`, `"PLC"`, or `"Other"`. Outside the CTE, find the total revenue from these categories, as well as their respective counts.
+* _Hint:_ You'll need the `INSTR()` function.
+
+```sql
+WITH trans_type AS (
+    SELECT
+        CASE
+            WHEN INSTR(customer, "LLC") THEN "LLC"
+            WHEN INSTR(customer, "Inc") THEN "INC"
+            WHEN INSTR(customer, "Ltd") THEN "Ltd"
+            WHEN INSTR(customer, "PLC") THEN "PLC"
+            ELSE "Other"
+        END AS company_type,
+        unit_price*quantity AS total_price
+    FROM transactions
+)
+SELECT
+    company_type,
+    COUNT(company_type) AS freq,
+    PRINTF("$%,.d", SUM(total_price)) AS total_price
+FROM trans_type
+GROUP BY company_type;
+```
+
+## Joins
+No, we're not done talking about views and CTEs! We're just going to start intermingling them in with further examples on joins, where the real power of these techniques becomes clearer.
+
+XX) Which employee made which sale? Join the `employees` table onto the `transactions` table by `employee_id`. You only need to include the employee's first/last name from `employees`.
+
+```sql
+SELECT t.*, e.firstname, e.lastname
+FROM transactions AS t
+LEFT JOIN employees AS e
+ON t.employee_id = e.ID;
+```
+
+XX) What is the name of the employee who made the most in sales? Find this answer by doing a join as in the previous problem. Your resulting query will be difficult for someone else to read.
+
+```sql
+SELECT
+    t.employee_id,
+    e.firstname,
+    e.lastname,
+    SUM(unit_price*quantity) AS total_price
+FROM transactions AS t
+LEFT JOIN employees AS e
+ON t.employee_id = e.ID
+GROUP BY t.employee_id
+ORDER BY total_price DESC
+LIMIT 5;
+```
+
+XX) Solve the previous problem by joining `employees` onto the `trans_by_employee` view you made earlier.
+
+XX) Solve the previous problem by joining `employees` onto a CTE.
+
+- Find potentially erroneous rows, who made sales before they started?
+- Join how much everyone's made back into the employees table.
+- Bonuses earned at `total_rev` > `salary`
+
+
+
+
+
+
