@@ -1,6 +1,6 @@
-# Views, CTEs, and Window Functions
+# Views, CTEs, and Joins
 
-This file contains several exercises on views, common table expressions (CTEs), and window functions. These topics are a step more involved and confusing than in the previous two files. Before attempting these problems, you'll probably need to do some research into these topics. Here are a few tutorials:
+This file contains several exercises on views, common table expressions (CTEs), and joins. These topics are a step more involved and confusing than in the previous two files. Before attempting these problems, you'll probably need to do some research into these topics. Here are a few tutorials:
 
 * [Tutorial on Views](https://www.sqlitetutorial.net/sqlite-create-view/)
 * [Tutorial on CTEs](https://www.essentialsql.com/introduction-common-table-expressions-ctes/)
@@ -174,7 +174,7 @@ SELECT
     t.employee_id,
     e.firstname,
     e.lastname,
-    SUM(unit_price*quantity) AS total_price
+    SUM(t.unit_price*t.quantity) AS total_price
 FROM transactions AS t
 LEFT JOIN employees AS e
 ON t.employee_id = e.ID
@@ -185,14 +185,101 @@ LIMIT 5;
 
 XX) Solve the previous problem by joining `employees` onto the `trans_by_employee` view you made earlier.
 
+```sql
+SELECT
+    t.*,
+    e.firstname,
+    e.lastname
+FROM trans_by_employee AS t
+LEFT JOIN employees AS e
+    ON t.employee_id = e.ID
+ORDER BY t.total_cost DESC
+LIMIT 5;
+```
+
 XX) Solve the previous problem by joining `employees` onto a CTE.
 
-- Find potentially erroneous rows, who made sales before they started?
-- Join how much everyone's made back into the employees table.
-- Bonuses earned at `total_rev` > `salary`
+```sql
+WITH t_cte AS (
+    SELECT
+        employee_id,
+        SUM(unit_price*quantity) as total_price
+    FROM transactions
+    GROUP BY employee_id
+)
+SELECT
+    t.employee_id,
+    t.total_price,
+    e.firstname,
+    e.lastname
+FROM employees AS e
+LEFT JOIN t_cte AS t
+    ON t.employee_id = e.ID
+ORDER BY t.total_price DESC
+LIMIT 5;
+```
 
+XX) Next, the company will try to give bonuses based on performance. Show all employees who've made more in sales than 1.5 times their salary. (You may use whatever technique you'd like to do the join: view, CTE, or even a subquery!)
 
+```sql
+SELECT
+    e.ID,
+    e.firstname,
+    e.lastname,
+    e.salary,
+    t.total_cost
+FROM employees AS e
+LEFT JOIN trans_by_employee AS t
+    ON e.ID = t.employee_id
+WHERE t.total_cost > 1.5*e.salary;
+```
 
+XX) Do we have potentially erroneous rows? Find all transactions which occurred _before_ the employee was even hired! (Make sure each transaction only occupies one row).
 
+```sql
+WITH trans_by_order AS (
+    SELECT order_id, orderdate, employee_id
+    FROM transactions
+    GROUP BY order_id
+)
+SELECT
+    t.*,
+    e.firstname,
+    e.lastname,
+    e.startdate
+FROM trans_by_order AS t
+LEFT JOIN employees AS e
+    ON e.ID = t.employee_id
+WHERE e.startdate > t.orderdate;
+```
 
+XX) Among all transactions that occurred from 2015 to 2019, create a table that is the monthly revenue and the total trading volume of Yum! in that month. Format the columns nicely. That is, a sample row of your result might look like this:
+
+```
+| year | month | company_revenue | yum_trade_volume |
+|------|-------|-----------------|------------------|
+| 2017 |    03 |        $100,000 |      125,000,000 |
+```
+
+* _Hint:_ You don't need any `WHERE` statements here. You can get the right answer simply by changing what kind of join you do!
+
+```sql
+SELECT
+    t.year,
+    t.month,
+    PRINTF("$%,.d", t.total_cost) AS company_revenue,
+    PRINTF("%,.d", y.tot_volume) AS yum_trade_volume
+FROM trans_by_month AS t
+INNER JOIN yum_by_month AS y
+    ON t.year = y.year AND t.month = y.month
+ORDER BY t.year, t.month;
+```
+
+XX) Repeat the previous problem, but in addition to the total volume, include:
+* The lowest price that month (ie, lowest low)
+* The highest price that month (ie, highest high)
+
+<!-- TODO: -->
+* The opening price for that month (ie, the first open of the month)
+* The closing price for that month (ie, the last close of the month)
 
