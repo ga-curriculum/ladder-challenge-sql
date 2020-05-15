@@ -163,7 +163,7 @@ for order_id in range(10000):
             (order_id, customer, price, quantity, orderdate, employee)
         )
 
-# Seed transactions ==================================
+# Seed yum ==================================
 cur.execute("""
 CREATE TABLE IF NOT EXISTS yum (
     date text,
