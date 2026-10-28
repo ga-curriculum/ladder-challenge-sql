@@ -1,4 +1,4 @@
-# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) The SQL Ladder Challenge
+# <picture><img src="https://ga-curriculum.github.io/universal-resources-internal/ga-logos/ga-red-cog-128x128.png" alt="" height="48" align="absmiddle"></picture> The SQL Ladder Challenge
 
 # Climb the Ladder!
 Our class moves quickly! SQL is important, and we'd like to give it the time and attention it deserves. Starting with the `01` file, we've provided several SQL problems that get progressively harder. They start trivial, and build into some serious head-scratchers. The progression is itended to be smooth, so the next rung of the ladder is always within reach!
